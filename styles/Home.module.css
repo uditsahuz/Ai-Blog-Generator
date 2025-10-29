@@ -1,0 +1,87 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--white);
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--indigo-200);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.posts {
+  display: flex;
+  flex-direction: column;
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--indigo-300);
+  font-size: 1.125rem;
+}
+
+.error {
+  background: rgba(250, 204, 21, 0.08);
+  border: 1px solid var(--yellow-300);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  color: var(--yellow-300);
+}
+
+.error h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--yellow-400);
+}
+
+.error p {
+  margin: 0 0 1rem 0;
+}
+
+.setupSteps {
+  background: var(--white);
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin-top: 1rem;
+  border: 1px solid var(--indigo-200);
+}
+
+.setupSteps h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--indigo-950);
+}
+
+.setupSteps ol {
+  margin: 0.5rem 0 0 0;
+  padding-left: 1.5rem;
+}
+
+.setupSteps li {
+  margin: 0.25rem 0;
+  color: var(--indigo-800);
+}
+
+.setupSteps code {
+  background: var(--indigo-100);
+  color: var(--indigo-800);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.875rem;
+}
+
+/* Single palette-driven theme; no separate dark override needed */

@@ -1,0 +1,40 @@
+.header {
+  background: linear-gradient(90deg, var(--indigo-700), var(--indigo-800));
+  border-bottom: 1px solid var(--indigo-800);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--white);
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.navLink {
+  color: var(--white);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: var(--yellow-200);
+}
+
+/* Single palette-driven theme; no separate dark override needed */
