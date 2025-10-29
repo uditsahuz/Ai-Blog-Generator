@@ -1,0 +1,19 @@
+.callout {
+  border: 1px solid var(--yellow-300);
+  background: rgba(250, 204, 21, 0.06);
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.title {
+  color: var(--yellow-400);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.body {
+  color: var(--indigo-200);
+}
+
+

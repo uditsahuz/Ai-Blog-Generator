@@ -4,6 +4,8 @@ import rehypeHighlight from 'rehype-highlight'
 import { supabase } from '../../lib/supabaseClient'
 import styles from '../../styles/Post.module.css'
 import AIAttribution from '../../components/AIAttribution'
+import MDXComponents from '../../components/MDXComponents'
+import Callout from '../../components/Callout'
 
 export default function Post({ post, source }) {
   return (
@@ -25,7 +27,7 @@ export default function Post({ post, source }) {
       </header>
       
       <div className={styles.content}>
-        <MDXRemote {...source} />
+        <MDXRemote {...source} components={{ ...MDXComponents, Callout }} />
       </div>
 
       <AIAttribution />
