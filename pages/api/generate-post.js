@@ -1,5 +1,5 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { supabaseAdmin } from '../../lib/supabaseClient';
+import { supabaseAdmin, isSupabaseAdminAvailable } from '../../lib/supabaseClient';
 import matter from 'gray-matter';
 import "dotenv/config";
 
@@ -77,6 +77,23 @@ publishedOn: "${formattedDate}"
       return res.status(500).json({ error: "Generated content missing required frontmatter." });
     }
 
+    // Check if admin client is available
+    if (!isSupabaseAdminAvailable()) {
+      const serviceKey = process.env.SUPABASE_SERVICE_KEY
+      let errorMsg = 'Supabase service key is not configured.'
+      
+      if (!serviceKey) {
+        errorMsg = 'SUPABASE_SERVICE_KEY is missing from .env.local. Please add it and restart your dev server.'
+      } else {
+        errorMsg = 'SUPABASE_SERVICE_KEY configuration issue. Please verify: 1) You copied the service_role key (not anon), 2) Keys match your project URL, 3) No extra spaces/quotes, 4) Restart dev server after adding.'
+      }
+      
+      return res.status(500).json({ 
+        error: errorMsg,
+        hint: 'Get your service_role key from Supabase Dashboard → Settings → API (NOT the anon key)'
+      });
+    }
+
     // Generate slug
     const slug = frontmatter.title
       .toLowerCase()
@@ -84,18 +101,39 @@ publishedOn: "${formattedDate}"
       .replace(/(^-|-$)/g, '');
 
     // Check if slug exists
-    const { data: existingPost } = await supabaseAdmin
-      .from('posts')
-      .select('id')
-      .eq('slug', slug)
-      .single();
+    let existingPost = null;
+    try {
+      const { data, error } = await supabaseAdmin
+        .from('posts')
+        .select('id')
+        .eq('slug', slug)
+        .maybeSingle();
+      
+      if (error && error.code !== 'PGRST116') { // PGRST116 is "not found" which is fine
+        console.error('Error checking existing post:', error);
+        return res.status(500).json({ error: 'Failed to check for existing posts.' });
+      }
+      existingPost = data;
+    } catch (error) {
+      console.error('Error querying Supabase:', error);
+      
+      let errorMsg = 'Invalid API key or Supabase configuration.'
+      if (error.message?.includes('Invalid API key') || error.message?.includes('JWT')) {
+        errorMsg = 'Invalid SUPABASE_SERVICE_KEY. Verify: 1) You copied the service_role key (not anon), 2) Keys match your project URL, 3) No extra spaces/quotes, 4) Restart dev server after changes.'
+      }
+      
+      return res.status(500).json({ 
+        error: errorMsg,
+        hint: 'The service_role key is different from the anon key. Find it in Supabase Dashboard → Settings → API → service_role'
+      });
+    }
 
     if (existingPost) {
       return res.status(400).json({ error: 'A post with this title already exists. Try a different prompt.' });
     }
 
     // Insert post
-    const { data: newPost, error } = await supabaseAdmin
+    const { data: newPost, error: insertError } = await supabaseAdmin
       .from('posts')
       .insert({
         title: frontmatter.title,
@@ -107,9 +145,20 @@ publishedOn: "${formattedDate}"
       .select()
       .single();
 
-    if (error) {
-      console.error('Supabase error:', error);
-      return res.status(500).json({ error: 'Failed to save blog post.' });
+    if (insertError) {
+      console.error('Supabase error:', insertError);
+      let errorMsg = 'Failed to save blog post.'
+      
+      if (insertError.message?.includes('API key') || insertError.message?.includes('JWT') || insertError.code === 'PGRST301') {
+        errorMsg = 'Invalid SUPABASE_SERVICE_KEY. The key you provided does not match your Supabase project. Please: 1) Get the correct service_role key from your project dashboard, 2) Ensure it matches NEXT_PUBLIC_SUPABASE_URL, 3) Restart dev server.'
+      } else if (insertError.code === '23505') {
+        errorMsg = 'A post with this slug already exists. Try a different prompt.'
+      }
+      
+      return res.status(500).json({ 
+        error: errorMsg,
+        details: insertError.message
+      });
     }
 
     return res.status(200).json({
