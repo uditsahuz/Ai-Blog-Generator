@@ -1,0 +1,29 @@
+.card {
+  border: 1px solid var(--indigo-800);
+  background: var(--indigo-900);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 2px 8px rgba(49, 46, 129, 0.3);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--yellow-300);
+  box-shadow: 0 4px 12px rgba(250, 204, 21, 0.2);
+}
+
+.title {
+  color: var(--white);
+  font-weight: 700;
+  font-size: 1.125rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--indigo-700);
+  padding-bottom: 0.5rem;
+}
+
+.body {
+  color: var(--indigo-200);
+  line-height: 1.7;
+}
+
