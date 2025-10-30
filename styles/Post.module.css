@@ -9,7 +9,7 @@
 .header {
   margin-bottom: 3rem;
   text-align: center;
-  border-bottom: 1px solid #c7d2fe; /* indigo-200 */
+  border-bottom: 1px solid var(--indigo-200);
   padding-bottom: 2rem;
 }
 
@@ -17,84 +17,84 @@
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #1e1b4b; /* indigo-950 */
+  color: var(--white);
   line-height: 1.2;
 }
 
 .excerpt {
   font-size: 1.25rem;
-  color: #4338ca; /* indigo-700 */
+  color: var(--indigo-300);
   margin-bottom: 1.5rem;
   line-height: 1.6;
 }
 
 .meta {
   font-size: 1rem;
-  color: #3730a3; /* indigo-800 */
+  color: var(--indigo-200);
 }
 
 .content {
-  color: #312e81; /* indigo-900 */
+  color: var(--indigo-50);
 }
 
 .aiAttribution {
   margin-top: 2.5rem;
   padding: 1rem 1.25rem;
-  border: 1px solid #c7d2fe; /* indigo-200 */
+  border: 1px solid var(--indigo-200);
   border-radius: 0.5rem;
-  background: #eef2ff; /* indigo-50 */
+  background: var(--indigo-50);
 }
 
 .aiAttributionText {
-  color: #312e81; /* indigo-900 */
+  color: var(--indigo-900);
 }
 
 .aiAttributionLinks a {
-  color: #4338ca; /* indigo-700 */
+  color: var(--yellow-300);
   font-weight: 600;
 }
 
 .aiAttributionLinks a:hover {
   text-decoration: underline;
-  color: #facc15; /* yellow-400 */
+  color: var(--yellow-400);
 }
 
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
   .header {
-    border-bottom-color: #312e81; /* indigo-900 */
+    border-bottom-color: var(--indigo-900);
   }
   
   .title {
-    color: #ffffff;
+    color: var(--white);
   }
   
   .excerpt {
-    color: #a5b4fc; /* indigo-300 */
+    color: var(--indigo-300);
   }
   
   .meta {
-    color: #c7d2fe; /* indigo-200 */
+    color: var(--indigo-300);
   }
   
   .content {
-    color: #c7d2fe; /* indigo-200 */
+    color: var(--indigo-100);
   }
 
   .aiAttribution {
-    border-color: #312e81; /* indigo-900 */
-    background: #1e1b4b; /* indigo-950 */
+    border-color: var(--indigo-900);
+    background: var(--indigo-950);
   }
 
   .aiAttributionText {
-    color: #a5b4fc; /* indigo-300 */
+    color: var(--indigo-100);
   }
 
   .aiAttributionLinks a {
-    color: #fde047; /* yellow-300 */
+    color: var(--yellow-300);
   }
   
   .aiAttributionLinks a:hover {
-    color: #fef08a; /* yellow-200 */
+    color: var(--yellow-200);
   }
 }

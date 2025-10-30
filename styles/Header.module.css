@@ -33,7 +33,7 @@
   transition: color 0.2s;
 }
 
-.navLink:hover {
+.navLink:hover, .navLink:focus {
   color: var(--yellow-200);
 }
 

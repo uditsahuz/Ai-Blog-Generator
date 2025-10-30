@@ -12,20 +12,20 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #1f2937;
+  color: var(--white);
 }
 
 .subtitle {
   font-size: 1.125rem;
-  color: #6b7280;
+  color: var(--indigo-200);
 }
 
 .form {
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: var(--indigo-50);
+  border: 1px solid var(--indigo-200);
   border-radius: 0.5rem;
   padding: 2rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px 0 rgba(49, 46, 129, 0.07); /* slight indigo shadow */
 }
 
 .field {
@@ -36,31 +36,32 @@
   display: block;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #374151;
+  color: var(--indigo-800);
 }
 
 .textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--indigo-200);
   border-radius: 0.375rem;
   font-size: 1rem;
   line-height: 1.5;
   resize: vertical;
   min-height: 120px;
   transition: border-color 0.2s;
+  background: var(--white);
+  color: var(--indigo-900);
 }
-
 .textarea:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: var(--indigo-800);
+  box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.08);
 }
 
 .button {
   width: 100%;
-  background: #2563eb;
-  color: white;
+  background: var(--yellow-400);
+  color: var(--indigo-800);
   border: none;
   border-radius: 0.375rem;
   padding: 0.75rem 1.5rem;
@@ -69,13 +70,13 @@
   cursor: pointer;
   transition: background-color 0.2s;
 }
-
 .button:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: var(--yellow-300);
+  color: var(--indigo-950);
 }
-
 .button:disabled {
-  background: #9ca3af;
+  background: var(--indigo-300);
+  color: var(--indigo-200);
   cursor: not-allowed;
 }
 
@@ -85,17 +86,15 @@
   border-radius: 0.375rem;
   font-weight: 500;
 }
-
 .success {
-  background: #d1fae5;
-  color: #065f46;
-  border: 1px solid #a7f3d0;
+  background: var(--indigo-50);
+  color: var(--indigo-900);
+  border: 1px solid var(--yellow-300);
 }
-
 .error {
-  background: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fecaca;
+  background: var(--yellow-200);
+  color: var(--indigo-950);
+  border: 1px solid var(--yellow-300);
 }
 
 @media (prefers-color-scheme: dark) {

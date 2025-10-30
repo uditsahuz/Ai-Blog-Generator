@@ -157,6 +157,15 @@ Custom MDX components are defined in `components/MDXComponents.js`. You can add 
 
 The AI prompt template can be modified in `pages/api/generate-post.js` to change how blog posts are generated.
 
+## Supabase Security & RLS (Production Best Practices)
+
+- **Row Level Security (RLS) must be enabled on all tables.** This prevents unauthorized direct access.
+- **Use the anon key only in browser-side/client-side code.**
+- **Use the service (admin) key ONLY server-side, e.g., inside API routes.** Never expose your service key to the browser/client!
+- All data writes (insert, update, delete) are performed by API routes using the service key (via `supabaseAdmin`). All public reads (blog viewing, home page, posts, etc.) use the anon key.
+- Double check your `.env.local` and deployment dashboard (e.g. Vercel) so that env variables are never accidentally exposed.
+- If adding new Supabase tables for advanced features, create appropriate RLS policies and ensure they are enabled by default.
+
 ## Deployment
 
 ### Vercel (Recommended)
@@ -184,3 +193,9 @@ The application can be deployed to any platform that supports Next.js, such as:
 ## License
 
 MIT License - feel free to use this project for your own blog or as a starting point for your applications.
+
+## Testing
+
+To run all tests: `npm test`
+
+All new features or bug fixes should be accompanied by either a unit or integration test. See the `__tests__` folder for examples. Recommended libraries: Jest, React Testing Library, and Playwright (for E2E/browser testing).

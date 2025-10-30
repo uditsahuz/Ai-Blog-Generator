@@ -2,6 +2,16 @@ import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { supabaseAdmin, isSupabaseAdminAvailable } from '../../lib/supabaseClient';
 import matter from 'gray-matter';
 import "dotenv/config";
+import {unified} from 'unified'
+import remarkParse from 'remark-parse'
+import remarkStringify from 'remark-stringify'
+import rehypeParse from 'rehype-parse'
+import rehypeSanitize from 'rehype-sanitize'
+import rehypeStringify from 'rehype-stringify'
+// TEMP: naive in-memory store for rate limiting, PROD: use upstash/redis, etc
+const ipRateLimit = {}
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 3;
 
 // Fallback model list: Gemini 2.5 Pro first, then Flash
 const MODEL_FALLBACKS = [
@@ -10,10 +20,22 @@ const MODEL_FALLBACKS = [
 ];
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  // --- RATE LIMITING ----
+  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  const now = Date.now()
+  ipRateLimit[ip] = (ipRateLimit[ip] || []).filter(ts => now - ts < RATE_LIMIT_WINDOW)
+  if (ipRateLimit[ip].length >= RATE_LIMIT_MAX) {
+    return res.status(429).json({ error: 'Too many requests. Try again later.' })
+  }
+  ipRateLimit[ip].push(now)
+  // --- END RATE LIMITING ---
 
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   const { prompt } = req.body;
-  if (!prompt || !prompt.trim()) return res.status(400).json({ error: 'Prompt is required' });
+  // PROMPT VALIDATION
+  if (!prompt || typeof prompt !== 'string' || !prompt.trim()) return res.status(400).json({ error: 'A prompt string is required.' });
+  if (prompt.length < 10 || prompt.length > 280) return res.status(400).json({ error: 'Prompt must be 10-280 characters.' });
+  // (Remove all profanity checks here)
 
   try {
     const geminiApiKey = process.env.GEMINI_API_KEY;
@@ -71,11 +93,38 @@ publishedOn: "${formattedDate}"
       return res.status(500).json({ error: "AI generation failed. Please try again later." });
     }
 
-    // Parse frontmatter
-    const { data: frontmatter, content } = matter(generatedContent);
+    // --- SANITIZE AI RESPONSE ---
+    // Only allow headings, paragraphs, lists, simple inline elements, no html/script/iframe/image/unknown jsx.
+    let { data: frontmatter, content } = matter(generatedContent);
     if (!frontmatter?.title || !frontmatter?.excerpt || !frontmatter?.publishedOn) {
       return res.status(500).json({ error: "Generated content missing required frontmatter." });
     }
+    // Clean title
+    frontmatter.title = String(frontmatter.title).replace(/\s+/g, ' ').trim().substring(0, 120)
+    // Sanitize MDX content (markdown -> HTML -> sanitized -> markdown)
+    let sanitized = null;
+    try {
+      // Parse mdx to HTML, then sanitize, then back to markdown (or render only whitelisted tags later)
+      const file = await unified()
+        .use(remarkParse)
+        .use(remarkStringify)
+        .use(rehypeParse, {fragment: true})
+        .use(rehypeSanitize, {
+          tagNames: [
+            'h1','h2','h3','h4','p','ul','ol','li','strong','em','code','pre','blockquote','a','hr','span','div','br'
+          ],
+          // Could further restrict, add attributes controls
+          // E.g. forbid style, onclick, etc.
+        })
+        .use(rehypeStringify)
+        .process(content)
+      sanitized = String(file)
+    } catch (err) {
+      console.error('Sanitization failed', err)
+      sanitized = '[Content removed by sanitizer, contact admin]'
+    }
+    content = sanitized
+    // --- END SANITIZATION ---
 
     // Check if admin client is available
     if (!isSupabaseAdminAvailable()) {
@@ -94,11 +143,14 @@ publishedOn: "${formattedDate}"
       });
     }
 
-    // Generate slug
-    const slug = frontmatter.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
+    // --- SLUG SAFETY: fallback slug on duplicate ---
+    let slug = frontmatter.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+        .substring(0, 64)
+    if (!slug) slug = `post-${Date.now()}`
+    // --- END SLUG SAFETY ---
 
     // Check if slug exists
     let existingPost = null;

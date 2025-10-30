@@ -4,22 +4,25 @@
   margin: 0;
 }
 
-/* Luxury Minimal Palette Variables */
+/* Luxury Minimal Color Palette */
 :root {
-  --indigo-700: #4338ca;
-  --indigo-800: #3730a3;
-  --indigo-900: #312e81;
-  --indigo-950: #1e1b4b;
-  --indigo-300: #a5b4fc;
-  --indigo-200: #c7d2fe;
-  --indigo-100: #e0e7ff;
-  --indigo-50: #eef2ff;
+  /* Indigo - Primary and Secondary */
+  --indigo-700: #4338ca; /* Gradient start, header accent */
+  --indigo-800: #3730a3; /* Gradient end, header accent */
+  --indigo-900: #312e81; /* Footer/Background start */
+  --indigo-950: #1e1b4b; /* Footer/Background end */
+  --indigo-300: #a5b4fc; /* Tertiary element, soft accent */
+  --indigo-200: #c7d2fe; /* Secondary text, subtle element */
+  --indigo-100: #e0e7ff; /* Input backgrounds, code blocks */
+  --indigo-50: #eef2ff;  /* Card backgrounds, subtle highlight */
 
-  --yellow-300: #fde047;
-  --yellow-400: #facc15;
-  --yellow-200: #fef08a;
+  /* Gold/Yellow Accent */
+  --yellow-300: #fde047;  /* Primary accent */
+  --yellow-400: #facc15;  /* Button backgrounds */
+  --yellow-200: #fef08a;  /* Hover/active accent */
 
-  --white: #ffffff;
+  /* White & Utility */
+  --white: #ffffff;       /* Main text, main bg */
 }
 
 html,

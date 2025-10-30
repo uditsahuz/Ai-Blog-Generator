@@ -8,6 +8,9 @@ export default function Layout({ children }) {
       <main className={styles.main}>
         {children}
       </main>
+      <footer className={styles.footer}>
+        © {new Date().getFullYear()} AI Blog. Crafted with luxury minimalism.
+      </footer>
     </div>
   )
 }
