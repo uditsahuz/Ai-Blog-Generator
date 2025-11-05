@@ -56,6 +56,15 @@ export default function Post({ post, source, error }) {
 }
 
 export async function getStaticPaths() {
+  // Check if Supabase is configured
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.warn('Supabase not configured during build - using fallback')
+    return {
+      paths: [],
+      fallback: 'blocking'
+    }
+  }
+
   try {
     const { data: posts, error } = await supabase
       .from('posts')
@@ -69,7 +78,7 @@ export async function getStaticPaths() {
       }
     }
 
-    const paths = posts.map((post) => ({
+    const paths = (posts || []).map((post) => ({
       params: { slug: post.slug }
     }))
 
@@ -87,6 +96,15 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+  // Check if Supabase is configured
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return {
+      props: {
+        error: 'Database not configured. Please check your environment variables.'
+      }
+    }
+  }
+
   try {
     const { data: post, error } = await supabase
       .from('posts')

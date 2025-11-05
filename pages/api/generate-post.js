@@ -1,7 +1,6 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { supabaseAdmin, isSupabaseAdminAvailable } from '../../lib/supabaseClient';
 import matter from 'gray-matter';
-import "dotenv/config";
 import {unified} from 'unified'
 import remarkParse from 'remark-parse'
 import remarkStringify from 'remark-stringify'
