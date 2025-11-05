@@ -34,7 +34,6 @@ export default async function handler(req, res) {
   const { prompt } = req.body;
   // PROMPT VALIDATION
   if (!prompt || typeof prompt !== 'string' || !prompt.trim()) return res.status(400).json({ error: 'A prompt string is required.' });
-  if (prompt.length < 10 || prompt.length > 280) return res.status(400).json({ error: 'Prompt must be 10-280 characters.' });
   // (Remove all profanity checks here)
 
   try {

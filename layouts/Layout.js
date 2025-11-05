@@ -9,7 +9,7 @@ export default function Layout({ children }) {
         {children}
       </main>
       <footer className={styles.footer}>
-        © {new Date().getFullYear()} AI Blog. Crafted with luxury minimalism.
+        Powered by AI | Curated by <strong>Udit Sahu</strong>
       </footer>
     </div>
   )

@@ -4,7 +4,6 @@ import rehypeHighlight from 'rehype-highlight'
 import rehypeSanitize from 'rehype-sanitize'
 import { supabase } from '../../lib/supabaseClient'
 import styles from '../../styles/Post.module.css'
-import AIAttribution from '../../components/AIAttribution'
 import MDXComponents from '../../components/MDXComponents'
 import Callout from '../../components/Callout'
 import Card from '../../components/Card'
@@ -51,7 +50,7 @@ export default function Post({ post, source, error }) {
         <MDXRemote {...source} components={{ ...MDXComponents, Callout, Card }} />
       </div>
 
-      <AIAttribution />
+      {/* Attribution banner removed; footer now shows this site-wide */}
     </article>
   )
 }
