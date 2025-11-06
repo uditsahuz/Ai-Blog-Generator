@@ -6,7 +6,7 @@
   font-weight: 700;
   margin: 2rem 0 1rem 0;
   color: var(--white);
-  border-bottom: 2px solid var(--indigo-900);
+  border-bottom: 2px solid var(--white-900);
   padding-bottom: 0.5rem;
 }
 
@@ -21,13 +21,13 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin: 1.25rem 0 0.75rem 0;
-  color: var(--indigo-200);
+  color: var(--white);
 }
 
 .p {
   margin: 1rem 0;
   line-height: 1.7;
-  color: var(--indigo-100);
+  color: var(--white);
 }
 
 .a {
@@ -57,23 +57,23 @@
   padding: 1rem 1.5rem;
   margin: 1.5rem 0;
   font-style: italic;
-  color: var(--indigo-100);
-  background: var(--indigo-950);
+  color: var(--white-100);
+  background: var(--white-950);
   border-radius: 0.375rem;
 }
 
 .code {
-  background: var(--indigo-900);
+  background: var(--white-900);
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   font-size: 0.875rem;
-  color: var(--indigo-100);
+  color: var(--white-100);
 }
 
 .pre {
-  background: var(--indigo-950);
-  color: var(--indigo-200);
+  background: var(--white-950);
+  color: var(--white-200);
   padding: 1.5rem;
   border-radius: 0.5rem;
   overflow-x: auto;
@@ -92,40 +92,40 @@
 .hr {
   border: none;
   height: 1px;
-  background: var(--indigo-900);
+  background: var(--white-900);
   margin: 2rem 0;
 }
 
 /* Light-mode overrides (if user's OS is light) */
 @media (prefers-color-scheme: light) {
   .h1 {
-    color: var(--indigo-950);
-    border-bottom-color: var(--indigo-100);
+    color: var(--white-950);
+    border-bottom-color: var(--white-100);
   }
   .h2 {
-    color: var(--indigo-900);
+    color: var(--white-900);
   }
   .h3 {
-    color: var(--indigo-800);
+    color: var(--white-800);
   }
   .p {
-    color: var(--indigo-900);
+    color: var(--white-900);
   }
   .a {
-    color: var(--indigo-700);
+    color: var(--white-700);
   }
   .a:hover {
     color: var(--yellow-400);
   }
   .blockquote {
-    color: var(--indigo-800);
-    background: var(--indigo-50);
+    color: var(--white-800);
+    background: var(--white-50);
   }
   .code {
-    background: var(--indigo-100);
-    color: var(--indigo-800);
+    background: var(--white-100);
+    color: var(--white-800);
   }
   .hr {
-    background: var(--indigo-200);
+    background: var(--white-200);
   }
 }

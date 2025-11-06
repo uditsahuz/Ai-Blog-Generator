@@ -7,7 +7,7 @@
   padding: 1.5rem;
   margin-bottom: 1.5rem;
   transition: all 0.2s;
-  background: var(--white);
+  background: var(--indigo-300);
 }
 
 .postItem:hover {

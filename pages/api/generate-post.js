@@ -127,17 +127,27 @@ publishedOn: "${formattedDate}"
     // Check if admin client is available
     if (!isSupabaseAdminAvailable()) {
       const serviceKey = process.env.SUPABASE_SERVICE_KEY
+      const isProduction = process.env.VERCEL || process.env.NODE_ENV === 'production'
+      
       let errorMsg = 'Supabase service key is not configured.'
       
       if (!serviceKey) {
-        errorMsg = 'SUPABASE_SERVICE_KEY is missing from .env.local. Please add it and restart your dev server.'
+        if (isProduction) {
+          errorMsg = 'SUPABASE_SERVICE_KEY is missing in Vercel. Please add it in Vercel Dashboard → Settings → Environment Variables → Production, then redeploy.'
+        } else {
+          errorMsg = 'SUPABASE_SERVICE_KEY is missing from .env.local. Please add it and restart your dev server.'
+        }
       } else {
-        errorMsg = 'SUPABASE_SERVICE_KEY configuration issue. Please verify: 1) You copied the service_role key (not anon), 2) Keys match your project URL, 3) No extra spaces/quotes, 4) Restart dev server after adding.'
+        if (isProduction) {
+          errorMsg = 'SUPABASE_SERVICE_KEY configuration issue in Vercel. Please verify: 1) You copied the service_role key (not anon), 2) Keys match your project URL, 3) No extra spaces/quotes, 4) Redeploy after fixing.'
+        } else {
+          errorMsg = 'SUPABASE_SERVICE_KEY configuration issue. Please verify: 1) You copied the service_role key (not anon), 2) Keys match your project URL, 3) No extra spaces/quotes, 4) Restart dev server after adding.'
+        }
       }
       
       return res.status(500).json({ 
         error: errorMsg,
-        hint: 'Get your service_role key from Supabase Dashboard → Settings → API (NOT the anon key)'
+        hint: 'Get your service_role key from Supabase Dashboard → Settings → API (NOT the anon key). In Vercel, make sure to set it for Production environment and redeploy.'
       });
     }
 
@@ -153,6 +163,15 @@ publishedOn: "${formattedDate}"
     // Check if slug exists
     let existingPost = null;
     try {
+      // Double-check that supabaseAdmin is available before using it
+      if (!supabaseAdmin) {
+        console.error('supabaseAdmin is null - SUPABASE_SERVICE_KEY likely not configured');
+        return res.status(500).json({ 
+          error: 'Database configuration error: SUPABASE_SERVICE_KEY is missing or invalid.',
+          hint: 'Please check your Vercel environment variables. Add SUPABASE_SERVICE_KEY in Vercel Dashboard → Settings → Environment Variables.'
+        });
+      }
+
       const { data, error } = await supabaseAdmin
         .from('posts')
         .select('id')
@@ -161,7 +180,11 @@ publishedOn: "${formattedDate}"
       
       if (error && error.code !== 'PGRST116') { // PGRST116 is "not found" which is fine
         console.error('Error checking existing post:', error);
-        return res.status(500).json({ error: 'Failed to check for existing posts.' });
+        return res.status(500).json({ 
+          error: 'Failed to check for existing posts.',
+          details: error.message || 'Unknown Supabase error',
+          hint: 'Check your Supabase RLS policies and ensure SUPABASE_SERVICE_KEY has proper permissions.'
+        });
       }
       existingPost = data;
     } catch (error) {
@@ -169,11 +192,14 @@ publishedOn: "${formattedDate}"
       
       let errorMsg = 'Invalid API key or Supabase configuration.'
       if (error.message?.includes('Invalid API key') || error.message?.includes('JWT')) {
-        errorMsg = 'Invalid SUPABASE_SERVICE_KEY. Verify: 1) You copied the service_role key (not anon), 2) Keys match your project URL, 3) No extra spaces/quotes, 4) Restart dev server after changes.'
+        errorMsg = 'Invalid SUPABASE_SERVICE_KEY. Verify: 1) You copied the service_role key (not anon), 2) Keys match your project URL, 3) No extra spaces/quotes, 4) Redeploy after adding environment variables.'
+      } else if (error.message?.includes('null') || error.message?.includes('undefined')) {
+        errorMsg = 'Supabase client not initialized. Check that SUPABASE_SERVICE_KEY is set in your production environment variables.'
       }
       
       return res.status(500).json({ 
         error: errorMsg,
+        details: error.message,
         hint: 'The service_role key is different from the anon key. Find it in Supabase Dashboard → Settings → API → service_role'
       });
     }
